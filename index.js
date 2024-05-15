@@ -247,7 +247,7 @@ app.get('/', async (req, res) => {
       }
       
       const response = await axios.get(url);
-      const balance = parseInt(response.data.result);
+      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -364,7 +364,7 @@ app.get('/', async (req, res) => {
   
   <h1>$NAI Circulating Supply Tracker</h1>
   <p>Total Supply: 10,000,000,000</p>
-  <p>Locked & Burnt $NAI: ${burntTokens.toLocaleString()}</p>
+  <p>Locked & Vesting $NAI: ${burntTokens.toLocaleString()}</p>
   <p>Live Circulating Supply of $NAI: ${totalSupply.toLocaleString()}</p>
   <br><br>
   <table>
@@ -420,7 +420,7 @@ app.get('/supply', async (req, res) => {
       }
 
       const response = await axios.get(url);
-      const balance = parseInt(response.data.result);
+      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -486,7 +486,7 @@ app.get('/api', async (req, res) => {
       }
       
       const response = await axios.get(url);
-      const balance = parseInt(response.data.result);
+      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -550,7 +550,7 @@ app.get('/totalsupply', async (req, res) => {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
       const response = await axios.get(url);
-      const balance = parseInt(response.data.result);
+      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -610,7 +610,7 @@ app.get('/locked', async (req, res) => {
       }
 
       const response = await axios.get(url);
-      const balance = parseInt(response.data.result);
+      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
