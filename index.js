@@ -108,6 +108,13 @@ const contractAddresses = [
     type: 'IDO',
     wallet: 'ChainGPT Pad', 
   },
+  {
+    address: '0xbB140F0F582801e88DEdc516691B0950ACDeD5c1',
+    chain: 'AVAX',
+    type: 'Staking',
+    wallet: 'Hypergrowth Activation Staking Campaign', 
+  },
+  
 ];
 
 // List of contract addresses with additional information
@@ -202,6 +209,12 @@ const contractAddressesCMC = [
     type: 'IDO',
     wallet: 'ChainGPT Pad', 
   },
+  {
+    address: '0xbB140F0F582801e88DEdc516691B0950ACDeD5c1',
+    chain: 'AVAX',
+    type: 'Staking',
+    wallet: 'Hypergrowth Activation Staking Campaign', 
+  },
 ];
 
 async function getTotalSupply() {
@@ -236,7 +249,7 @@ app.get('/', async (req, res) => {
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
       
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       let url = '';
       if(chain === 'AVAX') {
@@ -410,7 +423,7 @@ app.get('/supply', async (req, res) => {
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
       // Introduce a delay of 250ms (1 second / 4) between each API call
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 500));
       let url = '';
       if(chain === 'AVAX') {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
@@ -476,7 +489,7 @@ app.get('/api', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddressesCMC) {
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 500));
       let url = '';
       if(chain === 'AVAX') {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
@@ -540,7 +553,7 @@ app.get('/totalsupply', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       let url = '';
       if(chain === 'AVAX') {
@@ -599,7 +612,7 @@ app.get('/locked', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       let url = '';
       if(chain === 'AVAX') {
