@@ -1,8 +1,8 @@
-const NodeCache = require('node-cache');
-const express = require('express');
-const axios = require('axios');
-const urlParam = require('url');
-require('dotenv').config();
+const NodeCache = require("node-cache");
+const express = require("express");
+const axios = require("axios");
+const urlParam = require("url");
+require("dotenv").config();
 
 const app = express();
 const port = 3000;
@@ -14,211 +14,234 @@ const apiKeyEth = process.env.ETHERSCAN_API_KEY;
 const cache = new NodeCache({ stdTTL: 600 }); // Set the cache expiration time to 600 seconds (10 minutes)
 
 // Contract address of NAI token
-const naiContractAddress = '0x5Ac34C53A04B9aaA0BF047e7291fb4e8A48f2A18';
+const naiContractAddress = "0x5Ac34C53A04B9aaA0BF047e7291fb4e8A48f2A18";
 
 // List of contract addresses with additional information
 const contractAddresses = [
   {
-    address: '0x0310Da0D8fF141166eD47548f00c96464880781F',
-    chain: 'AVAX',
-    type: 'Vesting',
-    wallet: 'Main Vesting', 
+    address: "0x0310Da0D8fF141166eD47548f00c96464880781F",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Main Vesting",
   },
   {
-    address: '0x9D8d4d46573278E3fcB9a1ff340e2175669B2cFe',
-    chain: 'AVAX',
-    type: 'Staking',
-    wallet: 'Nuklai Staking Campaign', 
+    address: "0x9D8d4d46573278E3fcB9a1ff340e2175669B2cFe",
+    chain: "AVAX",
+    type: "Staking",
+    wallet: "Nuklai Staking Campaign",
   },
   {
-    address: '0x09B2ae782eF99c7778250BDAe12BCC9EF48a1b4F',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x09B2ae782eF99c7778250BDAe12BCC9EF48a1b4F",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x74816789897C4ddE2eAA86771eCA72f92097c4E7',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x74816789897C4ddE2eAA86771eCA72f92097c4E7",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x7230168E8f93ea7F1CD9b70C0D9eD0AE94224813',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x7230168E8f93ea7F1CD9b70C0D9eD0AE94224813",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x6613438c01AF8F22554e6c7Eb6281acED3990839',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x6613438c01AF8F22554e6c7Eb6281acED3990839",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x1bc8FC30c499f30e85E37F2AE544DdEEAe52C44c',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '1 Month Staking Campaign', 
+    address: "0x1bc8FC30c499f30e85E37F2AE544DdEEAe52C44c",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "1 Month Staking Campaign",
   },
   {
-    address: '0x374300eFFCc6e8cDBCB47dB7D2736628789E9921',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '3 Month Staking Campaign', 
+    address: "0x374300eFFCc6e8cDBCB47dB7D2736628789E9921",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "3 Month Staking Campaign",
   },
   {
-    address: '0xe746d677090fDae0813c6B37012827F382f006D0',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '6 Month Staking Campaign', 
+    address: "0xe746d677090fDae0813c6B37012827F382f006D0",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "6 Month Staking Campaign",
   },
   {
-    address: '0xf29093e35174a8C3c48605F6313Bc4723f7689A2',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '12 Month Staking Campaign', 
+    address: "0xf29093e35174a8C3c48605F6313Bc4723f7689A2",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "12 Month Staking Campaign",
   },
   {
-    address: '0x836b8ebB4E135F82C96aa60F415b4B18D972a4B9',
-    chain: 'AVAX',
-    type: 'Fundrs',
-    wallet: 'Fundrs', 
+    address: "0x836b8ebB4E135F82C96aa60F415b4B18D972a4B9",
+    chain: "AVAX",
+    type: "Fundrs",
+    wallet: "Fundrs",
   },
   {
-    address: '0xcbA3c4Dc5CA03d67643Cbb817E39B6D2e7d2F963',
-    chain: 'AVAX',
-    type: 'Multisig',
-    wallet: 'Multisig', 
+    address: "0xcbA3c4Dc5CA03d67643Cbb817E39B6D2e7d2F963",
+    chain: "AVAX",
+    type: "Multisig",
+    wallet: "Multisig",
   },
   {
-    address: '0x0A27A6Ea9d8621423c1AFF1f84d06b4cf2F5f6e7',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'WeWay', 
+    address: "0x0A27A6Ea9d8621423c1AFF1f84d06b4cf2F5f6e7",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "WeWay",
   },
   {
-    address: '0xa583c6725f935c64Fd1ab27303305DF946e9e5b9',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'Ape', 
+    address: "0xa583c6725f935c64Fd1ab27303305DF946e9e5b9",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "Ape",
   },
   {
-    address: '0xe95D5A9e3CD46D717939B5B9175e047Fd56910fd',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'ChainGPT Pad', 
+    address: "0xe95D5A9e3CD46D717939B5B9175e047Fd56910fd",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "ChainGPT Pad",
   },
   {
-    address: '0xbB140F0F582801e88DEdc516691B0950ACDeD5c1',
-    chain: 'AVAX',
-    type: 'Staking',
-    wallet: 'Hypergrowth Activation Staking Campaign', 
+    address: "0xbB140F0F582801e88DEdc516691B0950ACDeD5c1",
+    chain: "AVAX",
+    type: "Staking",
+    wallet: "Hypergrowth Activation Staking Campaign",
   },
-  
+  {
+    address: "0x5e5cDE7c8C79C06D29A2DCEF6f4EE9E248E033cc",
+    chain: "AVAX",
+    type: "Claim Portal",
+    wallet: "Nuklai Claim Portal Locked Tokens",
+  },
+  {
+    address: "0x087CcEF97b666d37a0407739ffF11B9e818E1BAE",
+    chain: "AVAX",
+    type: "Claim Portal",
+    wallet: "Nuklai Claim Portal",
+  },
 ];
 
 // List of contract addresses with additional information
 const contractAddressesCMC = [
   {
-    address: '0x0310Da0D8fF141166eD47548f00c96464880781F',
-    chain: 'AVAX',
-    type: 'Vesting',
-    wallet: 'Main Vesting', 
+    address: "0x0310Da0D8fF141166eD47548f00c96464880781F",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Main Vesting",
   },
   {
-    address: '0x9D8d4d46573278E3fcB9a1ff340e2175669B2cFe',
-    chain: 'AVAX',
-    type: 'Staking',
-    wallet: 'Nuklai Staking Campaign', 
+    address: "0x9D8d4d46573278E3fcB9a1ff340e2175669B2cFe",
+    chain: "AVAX",
+    type: "Staking",
+    wallet: "Nuklai Staking Campaign",
   },
   {
-    address: '0x09B2ae782eF99c7778250BDAe12BCC9EF48a1b4F',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x09B2ae782eF99c7778250BDAe12BCC9EF48a1b4F",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x74816789897C4ddE2eAA86771eCA72f92097c4E7',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x74816789897C4ddE2eAA86771eCA72f92097c4E7",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x7230168E8f93ea7F1CD9b70C0D9eD0AE94224813',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x7230168E8f93ea7F1CD9b70C0D9eD0AE94224813",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x6613438c01AF8F22554e6c7Eb6281acED3990839',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: 'DUA Staking Campaign', 
+    address: "0x6613438c01AF8F22554e6c7Eb6281acED3990839",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "DUA Staking Campaign",
   },
   {
-    address: '0x1bc8FC30c499f30e85E37F2AE544DdEEAe52C44c',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '1 Month Staking Campaign', 
+    address: "0x1bc8FC30c499f30e85E37F2AE544DdEEAe52C44c",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "1 Month Staking Campaign",
   },
   {
-    address: '0x374300eFFCc6e8cDBCB47dB7D2736628789E9921',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '3 Month Staking Campaign', 
+    address: "0x374300eFFCc6e8cDBCB47dB7D2736628789E9921",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "3 Month Staking Campaign",
   },
   {
-    address: '0xe746d677090fDae0813c6B37012827F382f006D0',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '6 Month Staking Campaign', 
+    address: "0xe746d677090fDae0813c6B37012827F382f006D0",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "6 Month Staking Campaign",
   },
   {
-    address: '0xf29093e35174a8C3c48605F6313Bc4723f7689A2',
-    chain: 'ETH',
-    type: 'Staking',
-    wallet: '12 Month Staking Campaign', 
+    address: "0xf29093e35174a8C3c48605F6313Bc4723f7689A2",
+    chain: "ETH",
+    type: "Staking",
+    wallet: "12 Month Staking Campaign",
   },
   {
-    address: '0x836b8ebB4E135F82C96aa60F415b4B18D972a4B9',
-    chain: 'AVAX',
-    type: 'Fundrs',
-    wallet: 'Fundrs', 
+    address: "0x836b8ebB4E135F82C96aa60F415b4B18D972a4B9",
+    chain: "AVAX",
+    type: "Fundrs",
+    wallet: "Fundrs",
   },
   {
-    address: '0xcbA3c4Dc5CA03d67643Cbb817E39B6D2e7d2F963',
-    chain: 'AVAX',
-    type: 'Multisig',
-    wallet: 'Multisig', 
+    address: "0xcbA3c4Dc5CA03d67643Cbb817E39B6D2e7d2F963",
+    chain: "AVAX",
+    type: "Multisig",
+    wallet: "Multisig",
   },
   {
-    address: '0x0A27A6Ea9d8621423c1AFF1f84d06b4cf2F5f6e7',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'WeWay', 
+    address: "0x0A27A6Ea9d8621423c1AFF1f84d06b4cf2F5f6e7",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "WeWay",
   },
   {
-    address: '0xa583c6725f935c64Fd1ab27303305DF946e9e5b9',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'Ape', 
+    address: "0xa583c6725f935c64Fd1ab27303305DF946e9e5b9",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "Ape",
   },
   {
-    address: '0xe95D5A9e3CD46D717939B5B9175e047Fd56910fd',
-    chain: 'AVAX',
-    type: 'IDO',
-    wallet: 'ChainGPT Pad', 
+    address: "0xe95D5A9e3CD46D717939B5B9175e047Fd56910fd",
+    chain: "AVAX",
+    type: "IDO",
+    wallet: "ChainGPT Pad",
   },
   {
-    address: '0xbB140F0F582801e88DEdc516691B0950ACDeD5c1',
-    chain: 'AVAX',
-    type: 'Staking',
-    wallet: 'Hypergrowth Activation Staking Campaign', 
+    address: "0xbB140F0F582801e88DEdc516691B0950ACDeD5c1",
+    chain: "AVAX",
+    type: "Staking",
+    wallet: "Hypergrowth Activation Staking Campaign",
+  },
+  {
+    address: "0x5e5cDE7c8C79C06D29A2DCEF6f4EE9E248E033cc",
+    chain: "AVAX",
+    type: "Claim Portal",
+    wallet: "Nuklai Claim Portal Locked Tokens",
+  },
+  {
+    address: "0x087CcEF97b666d37a0407739ffF11B9e818E1BAE",
+    chain: "AVAX",
+    type: "Claim Portal",
+    wallet: "Nuklai Claim Portal",
   },
 ];
 
 async function getTotalSupply() {
-  const cachedTotalSupply = cache.get('totalSupply');
+  const cachedTotalSupply = cache.get("totalSupply");
   if (cachedTotalSupply !== undefined) {
     return cachedTotalSupply;
   }
@@ -228,17 +251,17 @@ async function getTotalSupply() {
     const response = await axios.get(url);
     const result = response.data.result;
 
-    cache.set('totalSupply', result); // Cache the total supply
+    cache.set("totalSupply", result); // Cache the total supply
 
     return result;
   } catch (error) {
-    console.error('Error fetching total supply:', error);
+    console.error("Error fetching total supply:", error);
     throw error;
   }
 }
 
-app.get('/', async (req, res) => {
-  const cachedBalances = cache.get('balances');
+app.get("/", async (req, res) => {
+  const cachedBalances = cache.get("balances");
   if (cachedBalances !== undefined) {
     res.send(cachedBalances);
     return;
@@ -248,19 +271,19 @@ app.get('/', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      let url = '';
-      if(chain === 'AVAX') {
+      let url = "";
+      if (chain === "AVAX") {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-      }
-      else if(chain === 'ETH') {
+      } else if (chain === "ETH") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
-      
+
       const response = await axios.get(url);
-      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
+      const balance = response?.data?.result
+        ? parseInt(response.data.result)
+        : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -268,13 +291,13 @@ app.get('/', async (req, res) => {
     balances.sort((a, b) => b.balance - a.balance); // Sort balances in descending order
 
     let totalBalance = 0;
-    
-    let tableRows = '';
+
+    let tableRows = "";
 
     for (const { address, balance, chain, type, wallet } of balances) {
       totalBalance += balance;
       const snowtraceLink = `https://snowtrace.io/token/0x9840652DC04fb9db2C43853633f0F62BE6f00f98?a=${address}`;
- 
+
       tableRows += `<tr>
       <td><a href="${snowtraceLink}" target="_blank">${address}</a></td>
         <td>${Math.floor(balance / 10 ** 18).toLocaleString()}</td>
@@ -285,8 +308,10 @@ app.get('/', async (req, res) => {
     }
 
     const totalSupplyEndpointResult = await getTotalSupply();
-    const burntTokens = 10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
-    const totalSupply = 10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
+    const burntTokens =
+      10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
+    const totalSupply =
+      10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
 
     const htmlResponse = ` <style>
     body {
@@ -403,16 +428,16 @@ app.get('/', async (req, res) => {
 
     `;
 
-    cache.set('balances', htmlResponse); // Cache the response
+    cache.set("balances", htmlResponse); // Cache the response
 
     res.send(htmlResponse);
   } catch (error) {
-    res.status(500).send('Error fetching data');
+    res.status(500).send("Error fetching data");
   }
 });
 
-app.get('/supply', async (req, res) => {
-  const cachedSupply = cache.get('supply');
+app.get("/supply", async (req, res) => {
+  const cachedSupply = cache.get("supply");
   if (cachedSupply !== undefined) {
     res.send(cachedSupply);
     return;
@@ -423,17 +448,18 @@ app.get('/supply', async (req, res) => {
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
       // Introduce a delay of 250ms (1 second / 4) between each API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      let url = '';
-      if(chain === 'AVAX') {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      let url = "";
+      if (chain === "AVAX") {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-      }
-      else if(chain === 'ETH') {
+      } else if (chain === "ETH") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
 
       const response = await axios.get(url);
-      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
+      const balance = response?.data?.result
+        ? parseInt(response.data.result)
+        : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -441,7 +467,7 @@ app.get('/supply', async (req, res) => {
     balances.sort((a, b) => b.balance - a.balance); // Sort balances in descending order
 
     let totalBalance = 0;
-    let tableRows = '';
+    let tableRows = "";
 
     for (const { address, balance, chain, type, wallet } of balances) {
       totalBalance += balance;
@@ -455,33 +481,33 @@ app.get('/supply', async (req, res) => {
     }
 
     const totalSupplyEndpointResult = await getTotalSupply();
-    const burntTokens = 10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
-    const totalSupply = 10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
+    const burntTokens =
+      10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
+    const totalSupply =
+      10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
 
     const htmlResponse = `${totalSupply}`;
 
-    cache.set('supply', htmlResponse); // Cache the supply response
+    cache.set("supply", htmlResponse); // Cache the supply response
 
     res.send(htmlResponse);
   } catch (error) {
-    res.status(500).send('Error fetching data');
+    res.status(500).send("Error fetching data");
   }
 });
 
-app.get('/api', async (req, res) => {
+app.get("/api", async (req, res) => {
   var queryData = urlParam.parse(req.url, true).query;
-  
-  const cachedSupply = cache.get('supply');
+
+  const cachedSupply = cache.get("supply");
   if (cachedSupply !== undefined) {
-    
-    if(queryData.result === 'json') {
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end(JSON.stringify({result: cachedSupply}))
-    }
-    else {
+    if (queryData.result === "json") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ result: cachedSupply }));
+    } else {
       res.send(cachedSupply);
     }
-    
+
     return;
   }
 
@@ -489,17 +515,18 @@ app.get('/api', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddressesCMC) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      let url = '';
-      if(chain === 'AVAX') {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      let url = "";
+      if (chain === "AVAX") {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-      }
-      else if(chain === 'ETH') {
+      } else if (chain === "ETH") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
-      
+
       const response = await axios.get(url);
-      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
+      const balance = response?.data?.result
+        ? parseInt(response.data.result)
+        : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -507,7 +534,7 @@ app.get('/api', async (req, res) => {
     balances.sort((a, b) => b.balance - a.balance); // Sort balances in descending order
 
     let totalBalance = 0;
-    let tableRows = '';
+    let tableRows = "";
 
     for (const { address, balance, chain, type, wallet } of balances) {
       totalBalance += balance;
@@ -521,29 +548,28 @@ app.get('/api', async (req, res) => {
     }
 
     const totalSupplyEndpointResult = await getTotalSupply();
-    const burntTokens = 10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
-    const totalSupply = 10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
+    const burntTokens =
+      10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
+    const totalSupply =
+      10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
 
     const htmlResponse = `${totalSupply.toLocaleString()}`;
 
-    cache.set('supply', htmlResponse); // Cache the supply response
+    cache.set("supply", htmlResponse); // Cache the supply response
 
-    if(queryData.result === 'json') {
-      res.writeHead(200, {'Content-Type': 'application/json'});
-      res.end(JSON.stringify({result: htmlResponse}))
-    }
-    else {
+    if (queryData.result === "json") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ result: htmlResponse }));
+    } else {
       res.send(htmlResponse);
     }
-
   } catch (error) {
-    res.status(500).send('Error fetching data');
+    res.status(500).send("Error fetching data");
   }
 });
 
-
-app.get('/totalsupply', async (req, res) => {
-  const cachedSupply = cache.get('newtotal');
+app.get("/totalsupply", async (req, res) => {
+  const cachedSupply = cache.get("newtotal");
   if (cachedSupply !== undefined) {
     res.send(cachedSupply);
     return;
@@ -553,17 +579,18 @@ app.get('/totalsupply', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      let url = '';
-      if(chain === 'AVAX') {
+      let url = "";
+      if (chain === "AVAX") {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-      }
-      else if(chain === 'AVAX') {
+      } else if (chain === "AVAX") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
       const response = await axios.get(url);
-      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
+      const balance = response?.data?.result
+        ? parseInt(response.data.result)
+        : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -571,7 +598,7 @@ app.get('/totalsupply', async (req, res) => {
     balances.sort((a, b) => b.balance - a.balance); // Sort balances in descending order
 
     let totalBalance = 0;
-    let tableRows = '';
+    let tableRows = "";
 
     for (const { address, balance, chain, type, wallet } of balances) {
       totalBalance += balance;
@@ -585,24 +612,23 @@ app.get('/totalsupply', async (req, res) => {
     }
 
     const totalSupplyEndpointResult = await getTotalSupply();
-    const burntTokens = 10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
-    const totalSupply = 10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
-    const newTotalS = 10000000000 - burntTokens; 
+    const burntTokens =
+      10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
+    const totalSupply =
+      10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
+    const newTotalS = 10000000000 - burntTokens;
     const htmlResponse = `${newTotalS}`;
 
-    cache.set('newtotal', htmlResponse); // Cache the newtotal response
-
-   
+    cache.set("newtotal", htmlResponse); // Cache the newtotal response
 
     res.send(htmlResponse);
-
   } catch (error) {
-    res.status(500).send('Error fetching data');
+    res.status(500).send("Error fetching data");
   }
 });
 
-app.get('/locked', async (req, res) => {
-  const cachedSupply = cache.get('burn');
+app.get("/locked", async (req, res) => {
+  const cachedSupply = cache.get("burn");
   if (cachedSupply !== undefined) {
     res.send(cachedSupply);
     return;
@@ -612,18 +638,19 @@ app.get('/locked', async (req, res) => {
     const balances = [];
 
     for (const { address, chain, type, wallet, name } of contractAddresses) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      let url = '';
-      if(chain === 'AVAX') {
+      let url = "";
+      if (chain === "AVAX") {
         url = `https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-      }
-      else if(chain === 'ETH') {
+      } else if (chain === "ETH") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
 
       const response = await axios.get(url);
-      const balance = response?.data?.result ? parseInt(response.data.result) : 0;
+      const balance = response?.data?.result
+        ? parseInt(response.data.result)
+        : 0;
 
       balances.push({ address, balance, chain, type, wallet, name });
     }
@@ -631,7 +658,7 @@ app.get('/locked', async (req, res) => {
     balances.sort((a, b) => b.balance - a.balance); // Sort balances in descending order
 
     let totalBalance = 0;
-    let tableRows = '';
+    let tableRows = "";
 
     for (const { address, balance, chain, type, wallet } of balances) {
       totalBalance += balance;
@@ -645,16 +672,18 @@ app.get('/locked', async (req, res) => {
     }
 
     const totalSupplyEndpointResult = await getTotalSupply();
-    const burntTokens = 10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
-    const totalSupply = 10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
+    const burntTokens =
+      10000000000 - Math.floor(totalSupplyEndpointResult / 10 ** 18);
+    const totalSupply =
+      10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
 
     const htmlResponse = `${burntTokens.toLocaleString()}`;
 
-    cache.set('burn', htmlResponse); // Cache the burn response
+    cache.set("burn", htmlResponse); // Cache the burn response
 
     res.send(htmlResponse);
   } catch (error) {
-    res.status(500).send('Error fetching data');
+    res.status(500).send("Error fetching data");
   }
 });
 
