@@ -126,6 +126,14 @@ const contractAddresses = [
     type: "Claim Portal",
     wallet: "Nuklai Claim Portal",
   },
+  {
+    address: "0x9526c03a87465b11618ad7c2671343e73a2cba92",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Vesting",
+  },
+
+  ,
 ];
 
 // List of contract addresses with additional information
@@ -238,6 +246,12 @@ const contractAddressesCMC = [
     type: "Claim Portal",
     wallet: "Nuklai Claim Portal",
   },
+  {
+    address: "0x9526c03a87465b11618ad7c2671343e73a2cba92",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Vesting",
+  },
 ];
 
 async function getTotalSupply() {
@@ -251,9 +265,12 @@ async function getTotalSupply() {
     const response = await axios.get(url);
     const result = response.data.result;
 
-    cache.set("totalSupply", result); // Cache the total supply
-
-    return result;
+    if (!isNaN(result)) {
+      cache.set("totalSupply", result); // Cache the total supply
+      return result;
+    } else {
+      return cachedTotalSupply;
+    }
   } catch (error) {
     console.error("Error fetching total supply:", error);
     throw error;
@@ -279,12 +296,10 @@ app.get("/", async (req, res) => {
       } else if (chain === "ETH") {
         url = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${naiContractAddress}&address=${address}&tag=latest&apikey=${apiKeyEth}`;
       }
-
       const response = await axios.get(url);
-      const balance = response?.data?.result
+      const balance = !isNaN(response?.data?.result)
         ? parseInt(response.data.result)
         : 0;
-
       balances.push({ address, balance, chain, type, wallet, name });
     }
 
@@ -553,7 +568,7 @@ app.get("/api", async (req, res) => {
     const totalSupply =
       10000000000 - Math.floor(totalBalance / 10 ** 18) - burntTokens;
 
-    const htmlResponse = `${totalSupply.toLocaleString()}`;
+    const htmlResponse = `${totalSupply}`;
 
     cache.set("supply", htmlResponse); // Cache the supply response
 
