@@ -132,8 +132,6 @@ const contractAddresses = [
     type: "Vesting",
     wallet: "Vesting",
   },
-
-  ,
 ];
 
 // List of contract addresses with additional information
