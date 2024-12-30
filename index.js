@@ -132,6 +132,12 @@ const contractAddresses = [
     type: "Vesting",
     wallet: "Vesting",
   },
+  {
+    address: "0xe160898fd18ee4075c210703e29925f937d58bf5",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Vesting",
+  },
 ];
 
 // List of contract addresses with additional information
@@ -246,6 +252,12 @@ const contractAddressesCMC = [
   },
   {
     address: "0x9526c03a87465b11618ad7c2671343e73a2cba92",
+    chain: "AVAX",
+    type: "Vesting",
+    wallet: "Vesting",
+  },
+  {
+    address: "0xe160898fd18ee4075c210703e29925f937d58bf5",
     chain: "AVAX",
     type: "Vesting",
     wallet: "Vesting",
